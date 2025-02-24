@@ -489,9 +489,10 @@ def diff(a, n=1, axis=-1):
 
 
 def digitize(x, bins):
-    raise NotImplementedError(
-        "`digitize` is not supported with openvino backend"
-    )
+    x = get_ov_output(x)
+    bins = get_ov_output(bins)
+    x, bins = _align_operand_types(x, bins, "bucketize()")
+    return OpenVINOKerasTensor(ov_opset.bucketize(x, bins).output(0))
 
 
 def dot(x, y):
