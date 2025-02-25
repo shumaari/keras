@@ -489,8 +489,13 @@ def diff(a, n=1, axis=-1):
 
 
 def digitize(x, bins):
-    x = get_ov_output(x)
-    bins = get_ov_output(bins)
+    element_type = None
+    if isinstance(x, OpenVINOKerasTensor):
+        element_type = x.output.get_element_type()
+    if isinstance(bins, OpenVINOKerasTensor):
+        element_type = bins.output.get_element_type()
+    x = get_ov_output(x, element_type)
+    bins = get_ov_output(bins, element_type)
     x, bins = _align_operand_types(x, bins, "bucketize()")
     return OpenVINOKerasTensor(ov_opset.bucketize(x, bins).output(0))
 
