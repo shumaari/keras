@@ -663,6 +663,12 @@ def digitize(x, bins):
     if standardize_dtype(x.dtype) == "bool":
         x = cast(x, "uint8")
     return cast(torch.bucketize(x, bins, right=True), "int32")
+    x1 = convert_to_tensor(x1)
+    x2 = convert_to_tensor(x2)
+    return torch.add(x1, x2)
+    dtype = standardize_dtype(dtype) or config.floatx()
+    ov_type = OPENVINO_DTYPES[dtype]
+    fill_value = get_ov_output(fill_value, ov_type)
 
 
 def dot(x, y):
